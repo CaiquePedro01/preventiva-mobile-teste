@@ -38,7 +38,9 @@ function budgetDetail(){const x=budget;const row=(k,v)=>`<div class="budget-meta
 function newBudget(source){const n=Date.now(),a=source?.atendimento||{},e=source?.equipamento||{};budget={id:"",cliente:a.cliente||"",fabricante:e.fabricante||"",modelo:e.modelo||"",serial:e.serie||"",pecaServico:"",observacao:"",foto:null,status:"Aguardando orçamento",origemTipo:source?"preventiva":"avulso",origemPreventivaId:source?.id||null,tecnico:a.tecnico||"",createdAt:n,updatedAt:n};budgetReturn=source?"observacoes":"orcamentos";go("orcamento-form")}
 function render(){const extra={orcamentos:budgetList,"orcamento-form":budgetForm,"orcamento-detail":budgetDetail};A.innerHTML=extra[screen]?extra[screen]():({inicio:home,dados,fotos,checklist,observacoes,revisao,relatorio,final}[screen])();if(screen==="observacoes")A.insertAdjacentHTML("beforeend",'<button class="button secondary" id="budget-from-preventiva">Registrar orçamento futuro</button>');bind();bindBudgets()}
 function bindBudgets(){
-  document.querySelector("#budgets-button").onclick=async()=>{if(!budgetDb)budgetDb=await openBudgets();await refreshBudgets();go("orcamentos")};
+  const budgetButton=document.querySelector("#budgets-button");
+  budgetButton.textContent=screen==="orcamentos"?"Preventivas":"Orçamentos";
+  budgetButton.onclick=async()=>{if(screen==="orcamentos")return go("inicio");if(!budgetDb)budgetDb=await openBudgets();await refreshBudgets();go("orcamentos")};
   document.querySelector("#budget-new")?.addEventListener("click",()=>newBudget());
   document.querySelector("#budget-from-preventiva")?.addEventListener("click",()=>newBudget(p));
   document.querySelectorAll("[data-budget-open]").forEach(b=>b.onclick=async()=>{budget=await budgetGet(b.dataset.budgetOpen);budgetReturn="orcamentos";go("orcamento-detail")});
