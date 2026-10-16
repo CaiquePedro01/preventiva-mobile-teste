@@ -717,7 +717,8 @@ button {
     .app-header,
     .progress,
     .notice,
-    .report-actions {
+    .report-actions,
+    .budget-actions {
         display: none !important;
     }
 
